@@ -1,3 +1,3 @@
 # Terasort-For-Spark
 
-teragen.py <# of rows> <outputdir>
+teragen.py <# of rows> <outputdirectory>
