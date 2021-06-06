@@ -72,10 +72,9 @@ if __name__ == "__main__":
 		sample_keys.append(llist[i][0])
 		print(sample_keys[i])
 	
-	rdd2 = sc.parallelize(sample_keys)
-	#rdd3 = sample_keys.sortByKey(lambda x: x[0])
+	#rdd2 = sc.parallelize(sample_keys)
+	#rdd3 = rdd2.sortByKey(ascending=True).map(lambda k, v, a: k).collect()
 	#rdd3.saveAsTextFile(out_complete_path)
-	
 	
 	
 	#row = list(range(0, len(llist))
