@@ -44,13 +44,17 @@ if __name__ == "__main__":
 
 	lines = sc.textFile(teragen_file_paths)
 	
+	
+	rdd3 = lines.map(lambda x:(x.split("'")[1],x.split(", ")[1]," " + x.split("'")[3]))
+	
 	# collect the RDD to a list
-	llist = lines.collect()
+	llist = rdd3.collect()
 	
 	# print the list
 	ii = 0
 	for line in llist:
-		print(str(ii) + " Key: " + line[ 1:13 ] + " RowID and Filler: " + line[ 15:(len(line)-1) ])
+		print(str(ii) +": Key: " + line[0] + ", RowID: "+ line[1]+ ", Filler: "+line[2])
+		
 		ii = ii + 1
 		
 	print(teragen_file_paths)
@@ -62,15 +66,15 @@ if __name__ == "__main__":
 	
 	
 	# Ammount of sampled keys that I choose
-	N = int(len(llist) / 100)
-	sample_keys = [N - 1]
-	for i in range(N - 1):
-		sample_keys.append(llist[i][ 2:12 ])
-		print(sample_keys[i])
-	
-	rdd = sc.parallelize(sample_keys)
-	rdd2 = sample_keys.map(lambda a, b : sample_keys[a] <= sample_keys[b])
-	rdd2.saveAsTextFile(out_complete_path)
+	#N = int(len(llist) / 100)
+	#sample_keys = [N - 1]
+	#for i in range(N - 1):
+	#	sample_keys.append(llist[i][ 2:12 ])
+	#	print(sample_keys[i])
+	#
+	#rdd = sc.parallelize(sample_keys)
+	#rdd2 = sample_keys.sortBy(lambda x: x[0]).collect()
+	#rdd2.saveAsTextFile(out_complete_path)
 	#raaa = sample_keys.map(lambda n : )
 	
 	
