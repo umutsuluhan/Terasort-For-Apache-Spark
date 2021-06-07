@@ -49,21 +49,22 @@ if __name__ == "__main__":
 
 	N = 8
 	sample_keys = ['BBBBBBBBBB','EEEEEEEEEE','HHHHHHHHHH','LLLLLLLLLL','PPPPPPPPPP', 'TTTTTTTTTT', 'VVVVVVVVVV']
-	rdd4 = sc.parallelize(sample_keys)
-	
-	
-	
-	rdd2= rdd.filter(lambda x: x[0] < sample_keys[0])
-	rdd3 = rdd2.map(lambda x: (x[0], sample_keys[0]) )
-	#rdd2 = rdd.filter(lambda x: sample_keys[1-1] <= x[0] and x[0] < sample_keys[1])
-	#rdd3.union(rdd2.map(lambda x: (x[0], sample_keys[1]) ))
-	#for i in  range(1,N):
-	#	rdd2 = rdd.filter(lambda x: sample_keys[i-1] <= x[0] and x[0] < sample_keys[i])
-	#	rdd3.union(rdd2.map(lambda x: (x[0], sample_keys[i]) ))
 	
 	
 	
 	
+	rdd2 = rdd.filter(lambda x: x[0] < sample_keys[0])
+	rdd3 = (rdd2.map(lambda x: (x[0], sample_keys[0] ) )).sortByKey()
+	
+
+	
+	
+	for i in  range(1,N-1):
+		rdd2 = rdd.filter(lambda x: sample_keys[i-1] <= x[0] and x[0] < sample_keys[i])	
+		rdd3 = rdd3.union((rdd2.map(lambda x: (x[0], sample_keys[i]) )).sortByKey())
+	
+	rdd2 = rdd.filter(lambda x: sample_keys[N-2] <= x[0])
+	rdd3 = rdd3.union((rdd2.map(lambda x: (x[0], "> "+ sample_keys[N-2] ) )).sortByKey())
 	
 	
 	rdd3.saveAsTextFile(out_complete_path)
