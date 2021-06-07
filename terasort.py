@@ -46,19 +46,40 @@ if __name__ == "__main__":
 	
 	
 	rdd = lines.map(lambda x:(x.split("'")[1],x.split(", ")[1]," " + x.split("'")[3]))
+
+	N = 8
+	sample_keys = ['BBBBBBBBBB','EEEEEEEEEE','HHHHHHHHHH','LLLLLLLLLL','PPPPPPPPPP', 'TTTTTTTTTT', 'VVVVVVVVVV']
+	rdd4 = sc.parallelize(sample_keys)
+	
+	
+	
+	rdd2= rdd.filter(lambda x: x[0] < sample_keys[0])
+	rdd3 = rdd2.map(lambda x: (x[0], sample_keys[0]) )
+	#rdd2 = rdd.filter(lambda x: sample_keys[1-1] <= x[0] and x[0] < sample_keys[1])
+	#rdd3.union(rdd2.map(lambda x: (x[0], sample_keys[1]) ))
+	#for i in  range(1,N):
+	#	rdd2 = rdd.filter(lambda x: sample_keys[i-1] <= x[0] and x[0] < sample_keys[i])
+	#	rdd3.union(rdd2.map(lambda x: (x[0], sample_keys[i]) ))
+	
+	
+	
+	
+	
+	
+	rdd3.saveAsTextFile(out_complete_path)
+	
 	
 	# collect the RDD to a list
-	llist = rdd.collect()
-	
+	#llist = rdd.collect()
+	llist = lines.collect()
 	# print the list
-	ii = 0
-	for line in llist:
-		print(str(ii) +": Key: " + line[0] + ", RowID: "+ line[1]+ ", Filler: "+line[2])
-		
-		ii = ii + 1
-		
-	print(teragen_file_paths)
-	
+	#ii = 0
+	#for line in llist:
+	#	print(str(ii) +": Key: " + line[0] + ", RowID: "+ line[1]+ ", Filler: "+line[2])
+	#	
+	#	ii = ii + 1
+	#	
+	#print(teragen_file_paths)
 	
 	
 	
@@ -66,11 +87,11 @@ if __name__ == "__main__":
 	
 	
 	# Ammount of sampled keys that I choose
-	N = int(len(llist) / 100)
-	sample_keys = [N - 1]
-	for i in range(N - 1):
-		sample_keys.append(llist[i][0])
-		print(sample_keys[i])
+	#N = int(len(llist) / 100)
+	#sample_keys = [N - 1]
+	#for i in range(N - 1):
+	#	sample_keys.append(llist[i][0])
+	#	print(sample_keys[i])
 	
 	#rdd2 = sc.parallelize(sample_keys)
 	#rdd3 = rdd2.sortByKey(ascending=True).map(lambda k, v, a: k).collect()
