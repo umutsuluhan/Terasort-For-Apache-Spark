@@ -30,15 +30,8 @@ if __name__ == "__main__":
 	conf = SparkConf().setAppName("Terasort")
 	sc = SparkContext(conf=conf)
 
-	# rowId = list(range(0, int(sys.argv[1])))
-
-	# rdd = sc.parallelize(rowId)
-	# rdd2 = rdd.map(lambda x :( "".join((random.choice(string.ascii_uppercase) for i in range(10))), x, "".join((random.choice(string.ascii_uppercase) for i in range(78)))))
-	# rdd2.saveAsTextFile(complete_path)
-
 	# https://www.tutorialkart.com/apache-spark/read-multiple-text-files-to-single-rdd/ 
-	# read input text files present in the directory to RDD
-
+	
 	teragen_file_name = "part-*"
 	teragen_file_paths = os.path.join(in_complete_path, teragen_file_name)
 
@@ -46,18 +39,25 @@ if __name__ == "__main__":
 	
 	
 	rdd = lines.map(lambda x:(x.split("'")[1],x.split(", ")[1]," " + x.split("'")[3]))
-
-	N = 8
-	sample_keys = ['BBBBBBBBBB','EEEEEEEEEE','HHHHHHHHHH','LLLLLLLLLL','PPPPPPPPPP', 'TTTTTTTTTT', 'VVVVVVVVVV']
+	
+	
+	
+	N = 10
+	sample_keys = list(range(N-1))
+	llines = lines.take(N)
+	for i in  range(N-1):
+		sample_keys[i] = llines[i].split("'")[1]
+		
+	sample_keys.sort()
+	
+	# N = 8
+	# sample_keys = ['BBBBBBBBBB','EEEEEEEEEE','HHHHHHHHHH','LLLLLLLLLL','PPPPPPPPPP', 'TTTTTTTTTT', 'VVVVVVVVVV']
 	
 	
 	
 	
 	rdd2 = rdd.filter(lambda x: x[0] < sample_keys[0])
 	rdd3 = (rdd2.map(lambda x: (x[0], sample_keys[0] ) )).sortByKey()
-	
-
-	
 	
 	for i in  range(1,N-1):
 		rdd2 = rdd.filter(lambda x: sample_keys[i-1] <= x[0] and x[0] < sample_keys[i])	
@@ -68,45 +68,4 @@ if __name__ == "__main__":
 	
 	
 	rdd3.saveAsTextFile(out_complete_path)
-	
-	
-	# collect the RDD to a list
-	#llist = rdd.collect()
-	#llist = lines.collect()
-	# print the list
-	#ii = 0
-	#for line in llist:
-	#	print(str(ii) +": Key: " + line[0] + ", RowID: "+ line[1]+ ", Filler: "+line[2])
-	#	
-	#	ii = ii + 1
-	#	
-	#print(teragen_file_paths)
-	
-	
-	
-	
-	
-	
-	# Ammount of sampled keys that I choose
-	#N = int(len(llist) / 100)
-	#sample_keys = [N - 1]
-	#for i in range(N - 1):
-	#	sample_keys.append(llist[i][0])
-	#	print(sample_keys[i])
-	
-	#rdd2 = sc.parallelize(sample_keys)
-	#rdd3 = rdd2.sortByKey(ascending=True).map(lambda k, v, a: k).collect()
-	#rdd3.saveAsTextFile(out_complete_path)
-	
-	
-	#row = list(range(0, len(llist))
-	#rdd4 = sc.parallelize(row)
-	
-	
-	
-	#reduce = rdd.reduce(lambda a,b:a+b)
-	
-	#lines = sc.textFile(in_file_name)
-	#lineLengths = lines.map(lambda s: len(s))
-	#totalLength = lineLengths.reduce(lambda a, b: a + b)
 	
