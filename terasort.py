@@ -39,8 +39,8 @@ if __name__ == "__main__":
 	
 	
 	rdd = lines.map(lambda x:(x.split("'")[1],x.split(", ")[1]," " + x.split("'")[3]))
-	
-	
+
+
 	
 	N = 10
 	sample_keys = list(range(N-1))
@@ -50,21 +50,20 @@ if __name__ == "__main__":
 		
 	sample_keys.sort()
 	
-	# N = 8
-	# sample_keys = ['BBBBBBBBBB','EEEEEEEEEE','HHHHHHHHHH','LLLLLLLLLL','PPPPPPPPPP', 'TTTTTTTTTT', 'VVVVVVVVVV']
+	# sample_keys = ['BBBBBBBBBB','EEEEEEEEEE','HHHHHHHHHH','JJJJJJJJJJ', 'LLLLLLLLLL','PPPPPPPPPP','SSSSSSSSSS', 'TTTTTTTTTT', 'VVVVVVVVVV']
 	
 	
 	
 	
 	rdd2 = rdd.filter(lambda x: x[0] < sample_keys[0])
-	rdd3 = (rdd2.map(lambda x: (x[0], sample_keys[0] ) )).sortByKey()
+	rdd3 = (rdd2.map(lambda x: (x[0], x) )).sortByKey().map(lambda x: (x[1][0],x[1][1],x[1][2]) )
 	
 	for i in  range(1,N-1):
 		rdd2 = rdd.filter(lambda x: sample_keys[i-1] <= x[0] and x[0] < sample_keys[i])	
-		rdd3 = rdd3.union((rdd2.map(lambda x: (x[0], sample_keys[i]) )).sortByKey())
+		rdd3 = rdd3.union((rdd2.map(lambda x: (x[0], x) )).sortByKey().map(lambda x: (x[1][0],x[1][1],x[1][2]) ))
 	
 	rdd2 = rdd.filter(lambda x: sample_keys[N-2] <= x[0])
-	rdd3 = rdd3.union((rdd2.map(lambda x: (x[0], "> "+ sample_keys[N-2] ) )).sortByKey())
+	rdd3 = rdd3.union((rdd2.map(lambda x: (x[0], x ) )).sortByKey().map(lambda x: (x[1][0],x[1][1],x[1][2]) ))
 	
 	
 	rdd3.saveAsTextFile(out_complete_path)
