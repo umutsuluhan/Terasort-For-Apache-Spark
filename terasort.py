@@ -71,7 +71,7 @@ if __name__ == "__main__":
 	
 	# collect the RDD to a list
 	#llist = rdd.collect()
-	llist = lines.collect()
+	#llist = lines.collect()
 	# print the list
 	#ii = 0
 	#for line in llist:
