@@ -10,6 +10,8 @@ Go to installation folder for Apache Spark 3.1.1,
 
 To generate data using Teragen
 
-{./bin/spark-submit teragen.py "# of rows" "outputdirectory"}  
+./bin/spark-submit teragen.py "# of rows" "outputdirectory"  
 
-# ./spark-submit terasort.py "inputdirectory" "outputdirectory"
+To sort the generated using Terasort
+
+./bin/spark-submit terasort.py "inputdirectory" "outputdirectory"
