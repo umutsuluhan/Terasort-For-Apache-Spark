@@ -1,6 +1,6 @@
 # Terasort-For-Spark
 
-#USAGE
+##USAGE##
 
 Prerequisites:
 - Apache Spark 3.1.1
