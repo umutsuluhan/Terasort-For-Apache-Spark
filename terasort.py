@@ -9,6 +9,9 @@ if __name__ == "__main__":
 		exit()
 
 	home_dir = os.getenv("HOME")
+	
+	# Get the Input Directory
+	
 	in_dir = str(home_dir) + str(sys.argv[1])
 	
 	in_file_name = "teragen"
@@ -17,6 +20,8 @@ if __name__ == "__main__":
 	if os.path.isdir(in_complete_path) == False:
 		print("Input path doesn't exist. Please run Teragen or enter new file path")
 		exit()
+	
+	# Get the Output Directory
 	
 	out_dir = str(home_dir) + str(sys.argv[2])
 
@@ -30,7 +35,7 @@ if __name__ == "__main__":
 	conf = SparkConf().setAppName("Terasort")
 	sc = SparkContext(conf=conf)
 
-	# https://www.tutorialkart.com/apache-spark/read-multiple-text-files-to-single-rdd/ 
+	# Select the files 
 	
 	teragen_file_name = "part-*"
 	teragen_file_paths = os.path.join(in_complete_path, teragen_file_name)
@@ -40,7 +45,7 @@ if __name__ == "__main__":
 	
 	rdd = lines.map(lambda x:(x.split("'")[1],x.split(", ")[1]," " + x.split("'")[3]))
 
-
+	# Generate the sample keys
 	
 	N = 10
 	sample_keys = list(range(N-1))
@@ -50,10 +55,7 @@ if __name__ == "__main__":
 		
 	sample_keys.sort()
 	
-	# sample_keys = ['BBBBBBBBBB','EEEEEEEEEE','HHHHHHHHHH','JJJJJJJJJJ', 'LLLLLLLLLL','PPPPPPPPPP','SSSSSSSSSS', 'TTTTTTTTTT', 'VVVVVVVVVV']
-	
-	
-	
+	# Partition the Data and Sort
 	
 	rdd2 = rdd.filter(lambda x: x[0] < sample_keys[0])
 	rdd3 = (rdd2.map(lambda x: (x[0], x) )).sortByKey().map(lambda x: (x[1][0],x[1][1],x[1][2]) )
@@ -65,6 +67,7 @@ if __name__ == "__main__":
 	rdd2 = rdd.filter(lambda x: sample_keys[N-2] <= x[0])
 	rdd3 = rdd3.union((rdd2.map(lambda x: (x[0], x ) )).sortByKey().map(lambda x: (x[1][0],x[1][1],x[1][2]) ))
 	
+	# Output the data
 	
 	rdd3.saveAsTextFile(out_complete_path)
 	
