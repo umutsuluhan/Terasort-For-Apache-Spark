@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
 	home_dir = os.getenv("HOME")
 	
-	# Get the Input Directory
+	# Check the Input Directory
 	
 	in_dir = str(home_dir) + str(sys.argv[1])
 	
@@ -21,7 +21,7 @@ if __name__ == "__main__":
 		print("Input path doesn't exist. Please run Teragen or enter new file path")
 		exit()
 	
-	# Get the Output Directory
+	# Check the Output Directory
 	
 	out_dir = str(home_dir) + str(sys.argv[2])
 
