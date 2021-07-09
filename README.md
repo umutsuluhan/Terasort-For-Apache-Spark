@@ -4,7 +4,6 @@
 
 Prerequisites:
 - Apache Spark 3.1.1
-- Java 11
 
 Go to installation folder for Apache Spark 3.1.1, 
 
